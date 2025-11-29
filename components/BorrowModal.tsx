@@ -1,19 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tool } from '../types';
 import { X, Calendar, MapPin } from 'lucide-react';
 
 interface BorrowModalProps {
   tool: Tool;
+  initialStartDate?: string;
   onClose: () => void;
   onSubmit: (data: any) => void;
 }
 
-export const BorrowModal: React.FC<BorrowModalProps> = ({ tool, onClose, onSubmit }) => {
-  const [startDate, setStartDate] = useState('');
+export const BorrowModal: React.FC<BorrowModalProps> = ({ tool, initialStartDate, onClose, onSubmit }) => {
+  const [startDate, setStartDate] = useState(initialStartDate || '');
   const [endDate, setEndDate] = useState('');
   const [reason, setReason] = useState('');
   const [logistics, setLogistics] = useState('PICKUP');
   const [logisticsDetails, setLogisticsDetails] = useState('');
+
+  // Update start date if prop changes
+  useEffect(() => {
+    if (initialStartDate) setStartDate(initialStartDate);
+  }, [initialStartDate]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

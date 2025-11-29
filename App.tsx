@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Plus, Users, Home, Bell, Wrench, QrCode, Share2, 
-  LayoutDashboard, Search, Calendar, ArrowRight, User as UserIcon, Check, History, LogOut, Settings
+  LayoutDashboard, Search, Calendar, ArrowRight, User as UserIcon, Check, History, LogOut, Settings, Clock, AlertCircle
 } from 'lucide-react';
 import { store } from './services/mockStore';
 import { Tool, Group, Booking, User, ToolStatus, BookingStatus, ViewState } from './types';
@@ -25,6 +25,8 @@ const App: React.FC = () => {
   // Modals
   const [showAddTool, setShowAddTool] = useState(false);
   const [selectedToolForBorrow, setSelectedToolForBorrow] = useState<Tool | null>(null);
+  const [initialBorrowDate, setInitialBorrowDate] = useState<string>(''); // For future requests
+
   const [showInvite, setShowInvite] = useState<Group | null>(null);
   const [toolToManage, setToolToManage] = useState<Tool | null>(null);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
@@ -87,6 +89,13 @@ const App: React.FC = () => {
   const activeBorrows = bookings.filter(b => b.borrowerId === currentUser.id && b.status === BookingStatus.APPROVED);
   const myToolsBorrowedOut = tools.filter(t => t.ownerId === currentUser.id && t.status === ToolStatus.BORROWED);
 
+  // Time calculations
+  const getHoursRemaining = (endDateStr: string) => {
+    const end = new Date(endDateStr).getTime();
+    const now = new Date().getTime();
+    return (end - now) / (1000 * 60 * 60);
+  };
+
   // Actions
   const handleAddTool = (newToolData: Omit<Tool, 'id' | 'ownerId'>) => {
     const newTool: Tool = {
@@ -124,6 +133,7 @@ const App: React.FC = () => {
     setBookings(updatedBookings);
     store.saveBookings(updatedBookings);
     setSelectedToolForBorrow(null);
+    setInitialBorrowDate('');
     setView('HISTORY');
   };
 
@@ -157,6 +167,10 @@ const App: React.FC = () => {
     );
     setTools(updatedTools);
     store.saveTools(updatedTools);
+  };
+
+  const handleRequestExtension = (booking: Booking) => {
+    alert(`Extension request sent to owner for ${booking.id}`);
   };
 
   const handleCreateGroup = (name: string) => {
@@ -211,9 +225,6 @@ const App: React.FC = () => {
       memberIds: group.memberIds.filter(id => id !== userId)
     };
     handleUpdateGroup(updatedGroup);
-    
-    // Logic to clean up tools shared in this group if owner leaves? 
-    // For now we leave them, or maybe the tools disappear from marketplace because user is no longer in group.
   };
 
   const handleGroupToolUpdate = (toolIds: string[], groupId: string) => {
@@ -321,7 +332,65 @@ const App: React.FC = () => {
         )}
       </section>
 
-      {/* 2. Tools I have Borrowed Out (Lending) */}
+      {/* 2. Tools I am Borrowing (Moved Up) */}
+      <section>
+        <h3 className="font-bold text-slate-800 mb-3 flex items-center gap-2">
+          <Wrench className="w-4 h-4 text-green-600" />
+          Tools You Have
+        </h3>
+        {activeBorrows.length === 0 ? (
+          <div className="bg-white p-4 rounded-xl border border-slate-200 text-sm text-slate-500">
+            You aren't borrowing anything right now.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-3">
+            {activeBorrows.map(booking => {
+              const tool = tools.find(t => t.id === booking.toolId);
+              const owner = users.find(u => u.id === booking.ownerId);
+              const hoursLeft = getHoursRemaining(booking.endDate);
+              const isUrgent = hoursLeft < 24 && hoursLeft > 0;
+              const isOverdue = hoursLeft <= 0;
+
+              return (
+                <div key={booking.id} className={`bg-white p-3 rounded-xl border ${isUrgent ? 'border-amber-300 bg-amber-50' : isOverdue ? 'border-red-300 bg-red-50' : 'border-green-200 bg-green-50/30'} flex flex-col gap-2`}>
+                  <div className="flex items-center gap-3">
+                    <img src={tool?.image} alt={tool?.name} className="w-14 h-14 rounded-lg object-cover" />
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-bold text-slate-800 text-sm truncate">{tool?.name}</h4>
+                      <p className="text-xs text-slate-500">From {owner?.name}</p>
+                      
+                      <div className={`flex items-center gap-1 mt-1 text-xs font-bold ${isUrgent ? 'text-amber-600' : isOverdue ? 'text-red-600' : 'text-slate-500'}`}>
+                        <Clock className="w-3 h-3" />
+                        {isOverdue ? 'Overdue!' : isUrgent ? `${Math.ceil(hoursLeft)} hours left` : `Due ${booking.endDate}`}
+                      </div>
+                    </div>
+                    <button 
+                      onClick={() => handleReturnTool(booking)}
+                      className="p-2 bg-white border border-slate-200 rounded-full hover:bg-slate-50 text-slate-600 shadow-sm"
+                      title="Return Tool"
+                    >
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                  
+                  {/* Extension Button for < 24h */}
+                  {isUrgent && (
+                     <button 
+                       onClick={() => handleRequestExtension(booking)}
+                       className="w-full py-1.5 text-xs font-bold text-amber-700 bg-amber-100 hover:bg-amber-200 rounded-lg flex items-center justify-center gap-1"
+                     >
+                       <AlertCircle className="w-3 h-3" />
+                       Request Time Extension
+                     </button>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
+      {/* 3. Tools I have Borrowed Out (Moved Down) */}
       <section>
         <h3 className="font-bold text-slate-800 mb-3 flex items-center gap-2">
           <Share2 className="w-4 h-4 text-blue-500" />
@@ -359,46 +428,6 @@ const App: React.FC = () => {
                       </div>
                     )}
                   </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </section>
-
-      {/* 3. Tools I am Borrowing */}
-      <section>
-        <h3 className="font-bold text-slate-800 mb-3 flex items-center gap-2">
-          <Wrench className="w-4 h-4 text-green-600" />
-          Tools You Have
-        </h3>
-        {activeBorrows.length === 0 ? (
-          <div className="bg-white p-4 rounded-xl border border-slate-200 text-sm text-slate-500">
-            You aren't borrowing anything right now.
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-3">
-            {activeBorrows.map(booking => {
-              const tool = tools.find(t => t.id === booking.toolId);
-              const owner = users.find(u => u.id === booking.ownerId);
-              return (
-                <div key={booking.id} className="bg-white p-3 rounded-xl border border-green-200 bg-green-50/30 flex items-center gap-3">
-                  <img src={tool?.image} alt={tool?.name} className="w-14 h-14 rounded-lg object-cover" />
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-bold text-slate-800 text-sm truncate">{tool?.name}</h4>
-                    <p className="text-xs text-slate-500">From {owner?.name}</p>
-                    <div className="flex items-center gap-1 mt-1 text-xs text-slate-500 font-medium">
-                      <Calendar className="w-3 h-3" />
-                      <span>Due {booking.endDate}</span>
-                    </div>
-                  </div>
-                  <button 
-                    onClick={() => handleReturnTool(booking)}
-                    className="p-2 bg-white border border-slate-200 rounded-full hover:bg-slate-50 text-slate-600"
-                    title="Return Tool"
-                  >
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
                 </div>
               );
             })}
@@ -461,15 +490,31 @@ const App: React.FC = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {marketTools.map(tool => (
-            <ToolCard 
-              key={tool.id} 
-              tool={tool} 
-              ownerName={users.find(u => u.id === tool.ownerId)?.name}
-              isOwner={false}
-              onAction={(t) => setSelectedToolForBorrow(t)}
-            />
-          ))}
+          {marketTools.map(tool => {
+            // Find active booking if borrowed
+            const activeBooking = bookings.find(b => 
+              b.toolId === tool.id && b.status === BookingStatus.APPROVED
+            );
+            
+            return (
+              <ToolCard 
+                key={tool.id} 
+                tool={tool} 
+                ownerName={users.find(u => u.id === tool.ownerId)?.name}
+                isOwner={false}
+                activeBooking={activeBooking}
+                onAction={(t) => setSelectedToolForBorrow(t)}
+                onFutureRequest={(t) => {
+                  if (activeBooking) {
+                    const nextDate = new Date(activeBooking.endDate);
+                    nextDate.setDate(nextDate.getDate() + 1);
+                    setInitialBorrowDate(nextDate.toISOString().split('T')[0]);
+                    setSelectedToolForBorrow(t);
+                  }
+                }}
+              />
+            );
+          })}
         </div>
       )}
     </div>
@@ -738,7 +783,11 @@ const App: React.FC = () => {
       {selectedToolForBorrow && (
         <BorrowModal 
           tool={selectedToolForBorrow}
-          onClose={() => setSelectedToolForBorrow(null)}
+          initialStartDate={initialBorrowDate}
+          onClose={() => {
+            setSelectedToolForBorrow(null);
+            setInitialBorrowDate('');
+          }}
           onSubmit={handleCreateBooking}
         />
       )}
