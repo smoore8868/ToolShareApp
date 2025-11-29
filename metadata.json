@@ -1,0 +1,7 @@
+{
+  "name": "ToolShare",
+  "description": "Inventory your tools, form groups with friends, and manage lending and borrowing with AI-powered tool identification.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
