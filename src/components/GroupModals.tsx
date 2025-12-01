@@ -175,9 +175,23 @@ export const GroupSettingsModal: React.FC<GroupSettingsModalProps> = ({
         {/* Header */}
         <div className="p-4 border-b border-slate-100 flex justify-between items-center">
           <h2 className="text-xl font-bold text-slate-800">{group.name}</h2>
-          <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full">
-            <X className="w-5 h-5 text-slate-500" />
-          </button>
+<button
+  onClick={onClose}
+  style={{
+    backgroundColor: '#1f2937',
+    color: '#f9fafb',
+    borderRadius: '9999px',
+    padding: '0.5rem',
+    border: 'none',
+    cursor: 'pointer',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }}
+>
+  <X style={{ width: '20px', height: '20px' }} />
+</button>
+
         </div>
 
         {/* Tabs */}
