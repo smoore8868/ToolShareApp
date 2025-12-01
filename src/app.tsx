@@ -4,7 +4,7 @@ import {
   LayoutDashboard, Search, Calendar, ArrowRight, User as UserIcon, Check, History, LogOut, Settings, Clock, AlertCircle
 } from 'lucide-react';
 import { store } from './services/mockStore';
-import { Tool, Group, Booking, User, ToolStatus, BookingStatus, ViewState } from './types';
+import type { Tool, Group, Booking, User, ToolStatus, BookingStatus, ViewState } from './types';
 import { ToolCard } from './components/ToolCard';
 import { AddToolModal } from './components/AddToolModal';
 import { BorrowModal } from './components/BorrowModal';
