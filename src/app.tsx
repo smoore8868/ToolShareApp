@@ -656,14 +656,13 @@ const App: React.FC = () => {
                 Settings
               </button>
               
-              <button 
-                onClick={() => setShowInvite(group)}
-                className="flex-1 bg-primary text-white py-2 rounded-lg font-bold text-sm hover:bg-indigo-600 transition-colors flex items-center justify-center gap-2"
-                title="Invite to Group"
-              >
-                <QrCode className="w-4 h-4" />
-                Invite
-              </button>
+              <button
+  onClick={() => onInvite(group)}
+  className="inline-flex items-center gap-2 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 text-sm font-medium shadow"
+>
+  <QrCode className="w-4 h-4" />
+  Invite
+</button>
             </div>
           </div>
         ))}
