@@ -46,7 +46,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
         <div className="bg-primary p-8 text-center">
           <div className="w-16 h-16 bg-black/20 rounded-2xl flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
-            <Wrench className="w-8 h-8 text-white" />
+            <Wrench className="w-8 h-8 text-black" />
           </div>
           <h1 className="text-3xl font-bold text-white mb-1">ToolShare</h1>
           <p className="text-black/80">Inventory, Share, Borrow.</p>
@@ -63,9 +63,9 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
             {isRegister && (
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Full Name</label>
+                <label className="block text-sm font-medium text-slate-300 mb-1">Full Name</label>
                 <div className="relative">
-                  <UserIcon className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
+                  <UserIcon className="absolute left-3 top-3 w-5 h-5 text-slate-200" />
                   <input 
                     type="text" 
                     value={name}
@@ -79,9 +79,9 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Email Address</label>
+              <label className="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
+                <Mail className="absolute left-3 top-3 w-5 h-5 text-slate-200" />
                 <input 
                   type="email" 
                   value={email}
@@ -94,9 +94,9 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Password</label>
+              <label className="block text-sm font-medium text-slate-300 mb-1">Password</label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
+                <Lock className="absolute left-3 top-3 w-5 h-5 text-slate-200" />
                 <input 
                   type="password" 
                   value={password}
@@ -110,7 +110,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
             <button 
               type="submit"
-              className="w-full bg-primary text-white font-bold py-3 rounded-xl hover:bg-indigo-600 transition-all active:scale-95 shadow-lg shadow-primary/20"
+              className="w-full bg-primary text-black font-bold py-3 rounded-xl hover:bg-indigo-600 transition-all active:scale-95 shadow-lg shadow-primary/20"
             >
               {isRegister ? 'Create Account' : 'Sign In'}
             </button>
@@ -118,7 +118,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
           <div className="my-6 flex items-center gap-4">
             <div className="h-px bg-slate-200 flex-1"></div>
-            <span className="text-slate-400 text-sm">or continue with</span>
+            <span className="text-slate-300 text-sm">or continue with</span>
             <div className="h-px bg-slate-200 flex-1"></div>
           </div>
 
@@ -139,7 +139,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
             <button 
               type="button"
               onClick={handleSocialLogin}
-              className="flex items-center justify-center gap-2 py-2.5 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors font-medium text-slate-700"
+              className="flex items-center justify-center gap-2 py-2.5 border border-slate-200 rounded-xl hover:bg-slate-300 transition-colors font-medium text-slate-300"
             >
                <svg className="w-5 h-5" viewBox="0 0 384 512" fill="currentColor">
                   <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 52.3-11.4 69.5-34.3z"/>
