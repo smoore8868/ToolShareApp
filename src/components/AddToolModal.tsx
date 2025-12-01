@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Camera, Sparkles, X, Upload, Loader2 } from 'lucide-react';
 import { analyzeToolImage } from '../services/geminiService';
-import type { Tool, ToolStatus } from '../types';
+import { Tool, ToolStatus } from '../types';
 
 interface AddToolModalProps {
   onClose: () => void;
