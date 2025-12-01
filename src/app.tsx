@@ -320,7 +320,7 @@ const App: React.FC = () => {
                     <span className="text-xs font-mono text-slate-500">{req.startDate} - {req.endDate}</span>
                     <button 
                       onClick={() => handleApproveBooking(req)}
-                      className="px-4 py-1.5 bg-primary text-white text-xs font-bold rounded-lg hover:bg-indigo-600 transition-colors"
+                      className="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg transition-colors"
                     >
                       Approve
                     </button>
@@ -446,7 +446,7 @@ const App: React.FC = () => {
             setPreSelectedGroupId(undefined);
             setShowAddTool(true);
           }}
-          className="bg-primary hover:bg-indigo-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+          className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg transition-colors"
         >
           <Plus className="w-5 h-5" />
           Add Tool
@@ -717,7 +717,7 @@ const App: React.FC = () => {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-20 px-4 py-3">
         <div className="max-w-5xl mx-auto flex justify-between items-center">
            <div className="flex items-center gap-2 text-primary font-bold text-lg">
-             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white">
+             <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white">
                <Wrench className="w-5 h-5" />
              </div>
              ToolShare
