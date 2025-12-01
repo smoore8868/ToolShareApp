@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import type { Tool, ToolStatus, Group } from '../types';
+import { Tool, ToolStatus, Group } from '../types';
 import { X, Trash2, Save, AlertTriangle, Camera, Users } from 'lucide-react';
 
 interface ManageToolModalProps {
