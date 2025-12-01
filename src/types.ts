@@ -28,20 +28,22 @@ export interface User {
   email?: string;
 }
 
-// ---- Status Enums (or union types) ----
+// ---- Status Enums ----
 
 export enum ToolStatus {
-  Available = "available",
-  Unavailable = "unavailable",
-  InUse = "in_use",
-  Maintenance = "maintenance",
+  AVAILABLE = "available",
+  UNAVAILABLE = "unavailable",
+  BORROWED = "borrowed",
+  MAINTENANCE = "maintenance",
 }
 
-export type BookingStatus = 
-  | 'pending' 
-  | 'approved' 
-  | 'rejected' 
-  | 'canceled';
+export enum BookingStatus {
+  PENDING = "pending",
+  APPROVED = "approved",
+  REJECTED = "rejected",
+  CANCELED = "canceled",
+}
+
 
 // ---- ViewState (generic UI state container) ----
 
