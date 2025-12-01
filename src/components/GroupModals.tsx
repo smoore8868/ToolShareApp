@@ -112,7 +112,7 @@ export const JoinGroupModal: React.FC<JoinGroupModalProps> = ({ onClose, onJoin 
               placeholder="e.g. DIY-1234"
             />
           </div>
-          <button type="submit" className="w-full bg-primary text-white font-bold py-3 rounded-xl hover:bg-indigo-600 transition-colors">
+          <button type="submit" className="w-full bg-indigo-600 transition-colors">
             Join Group
           </button>
         </form>
@@ -199,7 +199,7 @@ export const GroupSettingsModal: React.FC<GroupSettingsModalProps> = ({
           <button 
             onClick={() => setActiveTab('USERS')}
             className={`flex-1 py-3 text-sm font-medium border-b-2 transition-colors flex items-center justify-center gap-2 ${
-              activeTab === 'USERS' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700'
+              activeTab === 'USERS' ? 'border-primary text-primary' : 'border-indigo-500 text-indigo-600':'border-transparent text-slate-500 hover:text-slate-700'
             }`}
           >
             <Settings className="w-4 h-4" />
