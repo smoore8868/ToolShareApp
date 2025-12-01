@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Tool, ToolStatus, Booking } from '../types';
+import { Tool, ToolStatus, Booking } from '../types';
 import { Clock, Tag, DollarSign, User, Calendar, AlertTriangle } from 'lucide-react';
 
 interface ToolCardProps {
