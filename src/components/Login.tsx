@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Wrench, Mail, Lock, User as UserIcon, AlertCircle } from 'lucide-react';
-import { User } from '../types';
+import type { User } from '../types';
 import { store } from '../services/mockStore';
 
 interface LoginProps {
