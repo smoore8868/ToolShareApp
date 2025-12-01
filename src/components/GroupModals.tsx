@@ -18,7 +18,6 @@ export const CreateGroupModal: React.FC<CreateGroupModalProps> = ({ onClose, onC
     }
   };
 
-  return (
   <button
   onClick={onClose}
   className="p-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-full shadow transition"
