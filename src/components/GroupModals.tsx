@@ -25,9 +25,7 @@ export const CreateGroupModal: React.FC<CreateGroupModalProps> = ({ onClose, onC
   >
   <X className="w-5 h-5" />
   </button>
-
-
-        </div>
+      
         <form onSubmit={handleSubmit} className="p-6">
           <label className="block text-sm font-medium text-slate-700 mb-2">Group Name</label>
           <input 
