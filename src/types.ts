@@ -30,11 +30,12 @@ export interface User {
 
 // ---- Status Enums (or union types) ----
 
-export type ToolStatus = 
-  | 'available' 
-  | 'unavailable' 
-  | 'in_use' 
-  | 'maintenance';
+export enum ToolStatus {
+  Available = "available",
+  Unavailable = "unavailable",
+  InUse = "in_use",
+  Maintenance = "maintenance",
+}
 
 export type BookingStatus = 
   | 'pending' 
