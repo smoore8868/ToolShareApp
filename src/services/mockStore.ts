@@ -1,4 +1,4 @@
-import type { Tool, User, Group, Booking, ToolStatus, BookingStatus } from '../types';
+import { Tool, User, Group, Booking, ToolStatus, BookingStatus } from '../types';
 
 
 // Initial Mock Data
