@@ -45,11 +45,11 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
     <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
         <div className="bg-primary p-8 text-center">
-          <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
+          <div className="w-16 h-16 bg-black/20 rounded-2xl flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
             <Wrench className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-white mb-1">ToolShare</h1>
-          <p className="text-white/80">Inventory, Share, Borrow.</p>
+          <p className="text-black/80">Inventory, Share, Borrow.</p>
         </div>
 
         <div className="p-8">
