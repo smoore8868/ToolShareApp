@@ -4,6 +4,23 @@
     <meta charset="UTF-8" />
     <title>My App</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+  tailwind.config = {
+    theme: {
+      extend: {}
+    }
+  };
+</script>
+
+<style>
+  button {
+    @apply bg-slate-700 text-white rounded-lg px-3 py-2;
+  }
+  button:hover {
+    @apply bg-slate-800;
+  }
+</style>
+
   </head>
   <body>
     <div id="root"></div>
