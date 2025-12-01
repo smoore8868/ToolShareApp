@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Tool, Group } from '../types';
+import type { Tool, Group } from '../types';
 import { X, Check } from 'lucide-react';
 
 interface ShareToolsModalProps {
