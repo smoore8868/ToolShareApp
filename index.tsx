@@ -1,11 +1,18 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './app';
 
-const rootElement = document.getElementById('root') as HTMLElement;
+function App() {
+  return (
+    <main
+      style={{
+        fontFamily: 'system-ui, sans-serif',
+        padding: '2rem',
+        textAlign: 'center',
+      }}
+    >
+      <h1>Hello from Vercel!</h1>
+      <p>If you can see this, your GitHub → Vercel deployment is working.</p>
+    </main>
+  );
+}
 
-ReactDOM.createRoot(rootElement).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-);
+export default App;
