@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+  import React, { useState, useRef } from 'react';
 import { Camera, Sparkles, X, Upload, Loader2 } from 'lucide-react';
 import { analyzeToolImage } from '../services/geminiService';
 import { Tool, ToolStatus } from '../types';
@@ -63,9 +63,13 @@ export const AddToolModal: React.FC<AddToolModalProps> = ({ onClose, onAdd, preS
       <div className="bg-white rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto shadow-2xl">
         <div className="p-4 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white z-10">
           <h2 className="text-xl font-bold text-slate-800">Add New Tool</h2>
-          <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full">
-            <X className="w-5 h-5 text-slate-500" />
+          <button
+            onClick={onClose}
+            className="p-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-full shadow"
+            >
+            <X className="w-5 h-5" />
           </button>
+
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
