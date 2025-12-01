@@ -81,9 +81,23 @@ export const JoinGroupModal: React.FC<JoinGroupModalProps> = ({ onClose, onJoin 
       <div className="bg-white rounded-2xl w-full max-w-sm">
         <div className="p-4 border-b border-slate-100 flex justify-between items-center">
           <h2 className="text-xl font-bold text-slate-800">Join Group</h2>
-          <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full">
-            <X className="w-5 h-5 text-slate-500" />
-          </button>
+<button
+  onClick={onClose}
+  style={{
+    backgroundColor: '#1f2937',
+    color: '#f9fafb',
+    borderRadius: '9999px',
+    padding: '0.5rem',
+    border: 'none',
+    cursor: 'pointer',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }}
+>
+  <X style={{ width: '20px', height: '20px' }} />
+</button>
+
         </div>
         <form onSubmit={handleSubmit} className="p-6">
           <label className="block text-sm font-medium text-slate-700 mb-2">Invite Code</label>
