@@ -23,12 +23,23 @@ export const CreateGroupModal: React.FC<CreateGroupModalProps> = ({ onClose, onC
       <div className="bg-white rounded-2xl w-full max-w-sm">
         <div className="p-4 border-b border-slate-100 flex justify-between items-center">
           <h2 className="text-xl font-bold text-slate-800">Create Group</h2>
-      <button
-        onClick={onClose}
-        className="p-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-full shadow transition"
-        >
-        <X className="w-5 h-5" />
-      </button>
+<button
+  onClick={onClose}
+  style={{
+    backgroundColor: '#1f2937',  // dark gray
+    color: '#f9fafb',            // near-white
+    borderRadius: '9999px',      // full circle
+    padding: '0.5rem',
+    border: 'none',
+    cursor: 'pointer',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }}
+>
+  <X style={{ width: '20px', height: '20px' }} />
+</button>
+
 
         </div>
         <form onSubmit={handleSubmit} className="p-6">
