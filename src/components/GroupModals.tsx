@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Group, User, Tool } from '../types';
+import type { Group, User, Tool } from '../types';
 import { X, Users, Trash2, Save, Wrench, Plus, UserPlus, LogOut, QrCode, Settings } from 'lucide-react';
 
 interface CreateGroupModalProps {
