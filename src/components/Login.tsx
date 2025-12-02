@@ -118,7 +118,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
           <div className="my-6 flex items-center gap-4">
             <div className="h-px bg-black flex-1"></div>
-            <span className="text-text-black text-sm">or continue with</span>
+            <span className="text-black text-sm">or continue with</span>
             <div className="h-px bg-black flex-1"></div>
           </div>
 
