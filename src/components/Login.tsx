@@ -126,7 +126,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
             <button 
               type="button"
               onClick={handleSocialLogin}
-              className="flex items-center justify-center gap-2 py-2.5 border border-black rounded-xl hover:bg-black transition-colors font-medium text-black"
+              className="flex items-center justify-center gap-2 py-2.5 border bg-black border-black rounded-xl hover:bg-black transition-colors font-medium text-black"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
