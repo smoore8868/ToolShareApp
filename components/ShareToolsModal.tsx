@@ -1,5 +1,6 @@
+
 import React, { useState } from 'react';
-import { Tool, Group } from '../types';
+import type { Tool, Group } from '../types';
 import { X, Check } from 'lucide-react';
 
 interface ShareToolsModalProps {
@@ -33,17 +34,17 @@ export const ShareToolsModal: React.FC<ShareToolsModalProps> = ({ group, myTools
       <div className="bg-white rounded-2xl w-full max-w-md max-h-[90vh] flex flex-col">
         <div className="p-4 border-b border-slate-100 flex justify-between items-center">
           <div>
-             <h2 className="text-xl font-bold text-black">Add Tools to Group</h2>
-             <p className="text-sm text-black/60">Sharing with: {group.name}</p>
+             <h2 className="text-xl font-bold text-slate-800">Add Tools to Group</h2>
+             <p className="text-sm text-slate-500">Sharing with: {group.name}</p>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full">
-            <X className="w-5 h-5 text-black/60" />
+            <X className="w-5 h-5 text-slate-500" />
           </button>
         </div>
 
         <div className="p-4 flex-1 overflow-y-auto">
           {myTools.length === 0 ? (
-            <div className="text-center py-8 text-black/60">
+            <div className="text-center py-8 text-slate-500">
               <p>You don't have any tools yet.</p>
             </div>
           ) : (
@@ -65,8 +66,8 @@ export const ShareToolsModal: React.FC<ShareToolsModalProps> = ({ group, myTools
                     </div>
                     <img src={tool.image} alt={tool.name} className="w-10 h-10 rounded object-cover" />
                     <div className="flex-1">
-                      <p className="font-medium text-black text-sm">{tool.name}</p>
-                      <p className="text-xs text-black/60 line-clamp-1">{tool.description}</p>
+                      <p className="font-medium text-slate-800 text-sm">{tool.name}</p>
+                      <p className="text-xs text-slate-500 line-clamp-1">{tool.description}</p>
                     </div>
                   </div>
                  )
