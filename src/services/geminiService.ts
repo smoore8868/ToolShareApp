@@ -29,3 +29,12 @@ export async function summarizeText(_text: string): Promise<string> {
 // Add more stubs here if your app imports more functions.
 // Example:
 // export async function getBorrowingAdvice(...) { return ""; }
+export async function analyzeToolImage(_image: any): Promise<any> {
+  console.warn("[Gemini] analyzeToolImage called, but Gemini is disabled.");
+  // Return something harmless that your UI can handle
+  return {
+    title: "",
+    description: "",
+    tags: [],
+  };
+}
