@@ -65,7 +65,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
               <div>
                 <label className="block text-sm font-medium text-text-black mb-1">Full Name</label>
                 <div className="relative">
-                  <UserIcon className="absolute left-3 top-3 w-5 h-5 text-slate-200" />
+                  <UserIcon className="absolute left-3 top-3 w-5 h-5 text-black" />
                   <input 
                     type="text" 
                     value={name}
@@ -81,7 +81,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
             <div>
               <label className="block text-sm font-medium text-text-black mb-1">Email Address</label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 w-5 h-5 text-slate-200" />
+                <Mail className="absolute left-3 top-3 w-5 h-5 text-black" />
                 <input 
                   type="email" 
                   value={email}
