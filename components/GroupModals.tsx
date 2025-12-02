@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Group, User, Tool } from '../types';
+import type { Group, User, Tool } from '../types';
 import { X, Users, Trash2, Save, Wrench, Plus, UserPlus, LogOut, QrCode, Settings } from 'lucide-react';
 
 interface CreateGroupModalProps {
@@ -22,22 +22,37 @@ export const CreateGroupModal: React.FC<CreateGroupModalProps> = ({ onClose, onC
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl w-full max-w-sm">
         <div className="p-4 border-b border-slate-100 flex justify-between items-center">
-          <h2 className="text-xl font-bold text-black">Create Group</h2>
-          <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full">
-            <X className="w-5 h-5 text-black/60" />
-          </button>
+          <h2 className="text-xl font-bold text-slate-800">Create Group</h2>
+<button
+  onClick={onClose}
+  style={{
+    backgroundColor: '#1f2937',  // dark gray
+    color: '#f9fafb',            // near-white
+    borderRadius: '9999px',      // full circle
+    padding: '0.5rem',
+    border: 'none',
+    cursor: 'pointer',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }}
+>
+  <X style={{ width: '20px', height: '20px' }} />
+</button>
+
+
         </div>
         <form onSubmit={handleSubmit} className="p-6">
-          <label className="block text-sm font-medium text-black mb-2">Group Name</label>
+          <label className="block text-sm font-medium text-slate-700 mb-2">Group Name</label>
           <input 
             autoFocus
             type="text" 
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none mb-6 text-black"
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none mb-6"
             placeholder="e.g. Neighborhood DIY"
           />
-          <button type="submit" className="w-full bg-primary text-white font-bold py-3 rounded-xl hover:bg-indigo-600 transition-colors">
+          <button type="submit" className="p-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-full shadow transition">
             Create Group
           </button>
         </form>
@@ -65,25 +80,39 @@ export const JoinGroupModal: React.FC<JoinGroupModalProps> = ({ onClose, onJoin 
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl w-full max-w-sm">
         <div className="p-4 border-b border-slate-100 flex justify-between items-center">
-          <h2 className="text-xl font-bold text-black">Join Group</h2>
-          <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full">
-            <X className="w-5 h-5 text-black/60" />
-          </button>
+          <h2 className="text-xl font-bold text-slate-800">Join Group</h2>
+<button
+  onClick={onClose}
+  style={{
+    backgroundColor: '#1f2937',
+    color: '#f9fafb',
+    borderRadius: '9999px',
+    padding: '0.5rem',
+    border: 'none',
+    cursor: 'pointer',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }}
+>
+  <X style={{ width: '20px', height: '20px' }} />
+</button>
+
         </div>
         <form onSubmit={handleSubmit} className="p-6">
-          <label className="block text-sm font-medium text-black mb-2">Invite Code</label>
+          <label className="block text-sm font-medium text-slate-700 mb-2">Invite Code</label>
           <div className="relative mb-6">
-            <QrCode className="absolute left-3 top-3 w-5 h-5 text-black/40" />
+            <QrCode className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
             <input 
               autoFocus
               type="text" 
               value={code}
               onChange={(e) => setCode(e.target.value)}
-              className="w-full pl-10 pr-3 py-3 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none uppercase font-mono text-black"
+              className="w-full pl-10 pr-3 py-3 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none uppercase font-mono"
               placeholder="e.g. DIY-1234"
             />
           </div>
-          <button type="submit" className="w-full bg-primary text-white font-bold py-3 rounded-xl hover:bg-indigo-600 transition-colors">
+          <button type="submit" className="w-full bg-indigo-600 transition-colors">
             Join Group
           </button>
         </form>
@@ -145,10 +174,24 @@ export const GroupSettingsModal: React.FC<GroupSettingsModalProps> = ({
       <div className="bg-white rounded-2xl w-full max-w-md flex flex-col max-h-[90vh]">
         {/* Header */}
         <div className="p-4 border-b border-slate-100 flex justify-between items-center">
-          <h2 className="text-xl font-bold text-black">{group.name}</h2>
-          <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full">
-            <X className="w-5 h-5 text-black/60" />
-          </button>
+          <h2 className="text-xl font-bold text-slate-800">{group.name}</h2>
+<button
+  onClick={onClose}
+  style={{
+    backgroundColor: '#1f2937',
+    color: '#f9fafb',
+    borderRadius: '9999px',
+    padding: '0.5rem',
+    border: 'none',
+    cursor: 'pointer',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }}
+>
+  <X style={{ width: '20px', height: '20px' }} />
+</button>
+
         </div>
 
         {/* Tabs */}
@@ -156,7 +199,7 @@ export const GroupSettingsModal: React.FC<GroupSettingsModalProps> = ({
           <button 
             onClick={() => setActiveTab('USERS')}
             className={`flex-1 py-3 text-sm font-medium border-b-2 transition-colors flex items-center justify-center gap-2 ${
-              activeTab === 'USERS' ? 'border-primary text-primary' : 'border-transparent text-black/60 hover:text-black'
+              activeTab === 'USERS' ? 'border-primary text-primary' : 'border-indigo-500 text-indigo-600:border-transparent text-slate-500 hover:text-slate-700'
             }`}
           >
             <Settings className="w-4 h-4" />
@@ -165,7 +208,7 @@ export const GroupSettingsModal: React.FC<GroupSettingsModalProps> = ({
           <button 
             onClick={() => setActiveTab('TOOLS')}
             className={`flex-1 py-3 text-sm font-medium border-b-2 transition-colors flex items-center justify-center gap-2 ${
-              activeTab === 'TOOLS' ? 'border-primary text-primary' : 'border-transparent text-black/60 hover:text-black'
+              activeTab === 'TOOLS' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700'
             }`}
           >
             <Wrench className="w-4 h-4" />
@@ -178,13 +221,13 @@ export const GroupSettingsModal: React.FC<GroupSettingsModalProps> = ({
           {activeTab === 'USERS' ? (
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-black mb-1">Group Name</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Group Name</label>
                 <div className="flex gap-2">
                   <input 
                     type="text" 
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none text-black"
+                    className="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
                     disabled={!isOwner}
                   />
                   {isOwner && (
@@ -200,7 +243,7 @@ export const GroupSettingsModal: React.FC<GroupSettingsModalProps> = ({
 
               <div>
                 <div className="flex justify-between items-end mb-2">
-                   <h3 className="text-sm font-medium text-black">Members ({members.length})</h3>
+                   <h3 className="text-sm font-medium text-slate-700">Members ({members.length})</h3>
                    <button 
                       onClick={onInvite}
                       className="text-xs text-primary font-bold flex items-center gap-1 hover:underline"
@@ -216,7 +259,7 @@ export const GroupSettingsModal: React.FC<GroupSettingsModalProps> = ({
                       <div className="flex items-center gap-2">
                         <img src={member.avatar} className="w-8 h-8 rounded-full border border-slate-100" alt={member.name} />
                         <div>
-                          <p className="text-sm font-medium text-black">{member.name}</p>
+                          <p className="text-sm font-medium text-slate-800">{member.name}</p>
                           {member.id === group.ownerId && <p className="text-[10px] text-amber-600 font-bold uppercase">Owner</p>}
                         </div>
                       </div>
@@ -224,14 +267,14 @@ export const GroupSettingsModal: React.FC<GroupSettingsModalProps> = ({
                       {isOwner && member.id !== currentUser.id && (
                         <button 
                           onClick={() => handleRemove(member.id, member.name)}
-                          className="p-1.5 text-black/40 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
+                          className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
                           title="Remove user from group"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
                       )}
                       {member.id === currentUser.id && (
-                         <span className="text-xs text-black/40 italic pr-2">You</span>
+                         <span className="text-xs text-slate-400 italic pr-2">You</span>
                       )}
                     </div>
                   ))}
@@ -252,7 +295,7 @@ export const GroupSettingsModal: React.FC<GroupSettingsModalProps> = ({
                 <div className="pt-4 border-t border-slate-100">
                    <button 
                       onClick={() => handleRemove(currentUser.id, "yourself")}
-                      className="w-full py-2 px-4 border border-slate-200 text-black/60 rounded-lg font-medium hover:bg-slate-50 flex items-center justify-center gap-2"
+                      className="w-full py-2 px-4 border border-slate-200 text-slate-600 rounded-lg font-medium hover:bg-slate-50 flex items-center justify-center gap-2"
                     >
                       <LogOut className="w-4 h-4" />
                       Leave Group
@@ -271,16 +314,16 @@ export const GroupSettingsModal: React.FC<GroupSettingsModalProps> = ({
               </button>
 
               <div className="space-y-2">
-                <h3 className="text-sm font-medium text-black/60">Shared in this group:</h3>
+                <h3 className="text-sm font-medium text-slate-500">Shared in this group:</h3>
                 {groupTools.length === 0 ? (
-                  <p className="text-center text-black/40 text-sm py-4 italic">No tools shared yet.</p>
+                  <p className="text-center text-slate-400 text-sm py-4 italic">No tools shared yet.</p>
                 ) : (
                   groupTools.map(tool => (
                     <div key={tool.id} className="flex items-center gap-3 p-3 border border-slate-100 rounded-lg bg-white">
                       <img src={tool.image} alt={tool.name} className="w-10 h-10 rounded object-cover" />
                       <div>
-                        <p className="font-medium text-black text-sm">{tool.name}</p>
-                        <p className="text-xs text-black/60">Owner: {members.find(m => m.id === tool.ownerId)?.name || 'Unknown'}</p>
+                        <p className="font-medium text-slate-800 text-sm">{tool.name}</p>
+                        <p className="text-xs text-slate-500">Owner: {members.find(m => m.id === tool.ownerId)?.name || 'Unknown'}</p>
                       </div>
                     </div>
                   ))
