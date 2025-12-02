@@ -1,4 +1,4 @@
-import { Tool, User, Group, Booking, ToolStatus, BookingStatus } from '../types';
+import { Tool, User, Group, Booking, ToolStatus } from '../types';
 
 // Initial Mock Data
 const DEFAULT_USERS: User[] = [
