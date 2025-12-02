@@ -155,7 +155,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
 </div>
 
 
-          <div className="mt-8 text-center">
+          <div className="mt-8 text-black text-center">
             <button 
               type="button"
               onClick={() => {
