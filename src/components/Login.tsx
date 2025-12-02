@@ -110,7 +110,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
             <button 
               type="submit"
-              className="w-full bg-primary text-black font-bold py-3 rounded-xl hover:bg-indigo-600 transition-all active:scale-95 shadow-lg shadow-primary/20"
+              className="w-full bg-indigo-600 text-black font-bold py-3 rounded-xl hover:bg-indigo-600 transition-all active:scale-95 shadow-lg shadow-primary/20"
             >
               {isRegister ? 'Create Account' : 'Sign In'}
             </button>
