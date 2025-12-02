@@ -63,7 +63,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
             {isRegister && (
               <div>
-                <label className="block text-sm font-medium text-text-black mb-1">Full Name</label>
+                <label className="block text-sm font-medium text-black mb-1">Full Name</label>
                 <div className="relative">
                   <UserIcon className="absolute left-3 top-3 w-5 h-5 text-black" />
                   <input 
@@ -79,7 +79,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-text-black mb-1">Email Address</label>
+              <label className="block text-sm font-medium text-black mb-1">Email Address</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-3 w-5 h-5 text-black" />
                 <input 
@@ -94,7 +94,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-text-black mb-1">Password</label>
+              <label className="block text-sm font-medium text-black mb-1">Password</label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 w-5 h-5 text-black" />
                 <input 
