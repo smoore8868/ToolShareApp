@@ -3,15 +3,15 @@ import {
   Plus, Users, Bell, Wrench, QrCode, Share2, 
   LayoutDashboard, Search, Calendar, ArrowRight, User as UserIcon, Check, History, LogOut, Settings, Clock, AlertCircle
 } from 'lucide-react';
-import { store } from './src/services/mockStore';
+import { store } from './services/mockStore';
 import { Tool, Group, Booking, User, ToolStatus, BookingStatus, ViewState } from './types';
-import { ToolCard } from './src/components/ToolCard';
-import { AddToolModal } from './src/components/AddToolModal';
-import { BorrowModal } from './src/components/BorrowModal';
-import { ManageToolModal } from './src/components/ManageToolModal';
-import { CreateGroupModal, GroupSettingsModal, JoinGroupModal } from './src/components/GroupModals';
-import { ShareToolsModal } from './src/components/ShareToolsModal';
-import { Login } from './src/components/Login';
+import { ToolCard } from './components/ToolCard';
+import { AddToolModal } from './components/AddToolModal';
+import { BorrowModal } from './components/BorrowModal';
+import { ManageToolModal } from './components/ManageToolModal';
+import { CreateGroupModal, GroupSettingsModal, JoinGroupModal } from './components/GroupModals';
+import { ShareToolsModal } from './components/ShareToolsModal';
+import { Login } from './components/Login';
 
 const App: React.FC = () => {
   // State
