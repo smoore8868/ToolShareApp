@@ -96,7 +96,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
             <div>
               <label className="block text-sm font-medium text-text-black mb-1">Password</label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 w-5 h-5 text-slate-200" />
+                <Lock className="absolute left-3 top-3 w-5 h-5 text-black" />
                 <input 
                   type="password" 
                   value={password}
@@ -117,16 +117,16 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
           </form>
 
           <div className="my-6 flex items-center gap-4">
-            <div className="h-px bg-slate-200 flex-1"></div>
+            <div className="h-px bg-black flex-1"></div>
             <span className="text-text-black text-sm">or continue with</span>
-            <div className="h-px bg-slate-200 flex-1"></div>
+            <div className="h-px bg-black flex-1"></div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <button 
               type="button"
               onClick={handleSocialLogin}
-              className="flex items-center justify-center gap-2 py-2.5 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors font-medium text-slate-700"
+              className="flex items-center justify-center gap-2 py-2.5 border border-black rounded-xl hover:bg-slate-700 transition-colors font-medium text-black"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
