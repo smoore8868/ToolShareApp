@@ -1,59 +1,31 @@
-import { GoogleGenAI, Type } from "@google/genai";
+// src/services/geminiService.ts
+// ------------------------------------------------------
+// Gemini is DISABLED in this build.
+// We keep this file so imports still work, but we do NOT
+// call the real Google Generative AI SDK from the browser.
+// ------------------------------------------------------
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+console.warn("[Gemini] Gemini features are currently disabled in this build.");
 
-interface ToolAnalysis {
-  name: string;
-  description: string;
-  estimatedPrice: number;
-  category: string;
+// 🔹 Example stub functions.
+// IMPORTANT: rename these to match what the rest of your app imports
+// from './services/geminiService'.
+
+// If somewhere you have: 
+//   import { getToolSuggestions } from './services/geminiService';
+// …then you need a function with that exact name here.
+
+export async function getToolSuggestions(_prompt: string): Promise<any[]> {
+  // Return an empty list so the UI still works
+  console.warn("[Gemini] getToolSuggestions called, but Gemini is disabled.");
+  return [];
 }
 
-export const analyzeToolImage = async (base64Image: string): Promise<ToolAnalysis | null> => {
-  if (!process.env.API_KEY) {
-    console.warn("No API Key provided for Gemini.");
-    return null;
-  }
+export async function summarizeText(_text: string): Promise<string> {
+  console.warn("[Gemini] summarizeText called, but Gemini is disabled.");
+  return "";
+}
 
-  // Strip prefix if present (e.g., "data:image/jpeg;base64,")
-  const cleanBase64 = base64Image.split(',')[1] || base64Image;
-
-  try {
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: {
-        parts: [
-          {
-            inlineData: {
-              mimeType: "image/jpeg",
-              data: cleanBase64
-            }
-          },
-          {
-            text: "Analyze this image. If it is a tool, provide a name, a brief 1-sentence description, an estimated purchase price in USD, and a category (e.g., Power Tools, Hand Tools, Garden). If not a tool, return nulls."
-          }
-        ]
-      },
-      config: {
-        responseMimeType: "application/json",
-        responseSchema: {
-          type: Type.OBJECT,
-          properties: {
-            name: { type: Type.STRING },
-            description: { type: Type.STRING },
-            estimatedPrice: { type: Type.NUMBER },
-            category: { type: Type.STRING }
-          }
-        }
-      }
-    });
-
-    const text = response.text;
-    if (!text) return null;
-    return JSON.parse(text) as ToolAnalysis;
-
-  } catch (error) {
-    console.error("Error analyzing image with Gemini:", error);
-    return null;
-  }
-};
+// Add more stubs here if your app imports more functions.
+// Example:
+// export async function getBorrowingAdvice(...) { return ""; }
