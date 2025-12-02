@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import type { Tool } from '../types';
+import { Tool } from '../types';
 import { X, Calendar, MapPin } from 'lucide-react';
 
 interface BorrowModalProps {
@@ -37,9 +37,9 @@ export const BorrowModal: React.FC<BorrowModalProps> = ({ tool, initialStartDate
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
         <div className="p-4 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white">
-          <h2 className="text-xl font-bold text-slate-800">Borrow Request</h2>
+          <h2 className="text-xl font-bold text-black">Borrow Request</h2>
           <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full">
-            <X className="w-5 h-5 text-slate-500" />
+            <X className="w-5 h-5 text-black/60" />
           </button>
         </div>
 
@@ -47,33 +47,33 @@ export const BorrowModal: React.FC<BorrowModalProps> = ({ tool, initialStartDate
           <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
             <img src={tool.image} alt={tool.name} className="w-12 h-12 rounded object-cover" />
             <div>
-              <p className="font-semibold text-slate-900">{tool.name}</p>
-              <p className="text-sm text-slate-500">Owner will approve your request</p>
+              <p className="font-semibold text-black">{tool.name}</p>
+              <p className="text-sm text-black/60">Owner will approve your request</p>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">From</label>
+              <label className="block text-sm font-medium text-black mb-1">From</label>
               <div className="relative">
-                <Calendar className="absolute left-3 top-2.5 w-4 h-4 text-slate-400" />
+                <Calendar className="absolute left-3 top-2.5 w-4 h-4 text-black/40" />
                 <input 
                   type="date" 
                   required
-                  className="w-full pl-9 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+                  className="w-full pl-9 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none text-black"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
                 />
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">To</label>
+              <label className="block text-sm font-medium text-black mb-1">To</label>
               <div className="relative">
-                <Calendar className="absolute left-3 top-2.5 w-4 h-4 text-slate-400" />
+                <Calendar className="absolute left-3 top-2.5 w-4 h-4 text-black/40" />
                 <input 
                   type="date" 
                   required
-                  className="w-full pl-9 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+                  className="w-full pl-9 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none text-black"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
                 />
@@ -82,11 +82,11 @@ export const BorrowModal: React.FC<BorrowModalProps> = ({ tool, initialStartDate
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Why do you need it?</label>
+            <label className="block text-sm font-medium text-black mb-1">Why do you need it?</label>
             <textarea 
               required
               rows={2}
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none text-black"
               placeholder="Building a birdhouse for my daughter..."
               value={reason}
               onChange={(e) => setReason(e.target.value)}
@@ -94,9 +94,9 @@ export const BorrowModal: React.FC<BorrowModalProps> = ({ tool, initialStartDate
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Logistics</label>
+            <label className="block text-sm font-medium text-black mb-1">Logistics</label>
             <select 
-              className="w-full p-2 border rounded-lg mb-2"
+              className="w-full p-2 border rounded-lg mb-2 text-black"
               value={logistics}
               onChange={(e) => setLogistics(e.target.value)}
             >
@@ -107,12 +107,12 @@ export const BorrowModal: React.FC<BorrowModalProps> = ({ tool, initialStartDate
             
             {(logistics === 'MEET' || logistics === 'DROP') && (
               <div className="relative animate-in fade-in slide-in-from-top-2">
-                <MapPin className="absolute left-3 top-2.5 w-4 h-4 text-slate-400" />
+                <MapPin className="absolute left-3 top-2.5 w-4 h-4 text-black/40" />
                 <input 
                   type="text" 
                   required
                   placeholder={logistics === 'MEET' ? "Where should we meet?" : "Drop off address"}
-                  className="w-full pl-9 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+                  className="w-full pl-9 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none text-black"
                   value={logisticsDetails}
                   onChange={(e) => setLogisticsDetails(e.target.value)}
                 />

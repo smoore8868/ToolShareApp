@@ -1,7 +1,6 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
-const apiKey = process.env.API_KEY || '';
-const ai = new GoogleGenAI({ apiKey });
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 interface ToolAnalysis {
   name: string;
@@ -11,7 +10,7 @@ interface ToolAnalysis {
 }
 
 export const analyzeToolImage = async (base64Image: string): Promise<ToolAnalysis | null> => {
-  if (!apiKey) {
+  if (!process.env.API_KEY) {
     console.warn("No API Key provided for Gemini.");
     return null;
   }

@@ -1,6 +1,5 @@
 import { Tool, User, Group, Booking, ToolStatus, BookingStatus } from '../types';
 
-
 // Initial Mock Data
 const DEFAULT_USERS: User[] = [
   { id: 'u1', name: 'Alex', email: 'alex@example.com', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex' },

@@ -64,9 +64,9 @@ export const ManageToolModal: React.FC<ManageToolModalProps> = ({ tool, groups, 
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
         <div className="p-4 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white z-10">
-          <h2 className="text-xl font-bold text-slate-800">Manage Tool</h2>
-          <button onClick={onClose} className="p-2 hover:bg-slate-200 rounded-full">
-            <X className="w-5 h-5 text-slate-300" />
+          <h2 className="text-xl font-bold text-black">Manage Tool</h2>
+          <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full">
+            <X className="w-5 h-5 text-black/60" />
           </button>
         </div>
 
@@ -94,21 +94,21 @@ export const ManageToolModal: React.FC<ManageToolModalProps> = ({ tool, groups, 
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Name</label>
+            <label className="block text-sm font-medium text-black mb-1">Name</label>
             <input 
               type="text" 
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+              className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none text-black"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Status</label>
+            <label className="block text-sm font-medium text-black mb-1">Status</label>
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value as ToolStatus)}
-              className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+              className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none text-black"
               disabled={tool.status === ToolStatus.BORROWED}
             >
               <option value={ToolStatus.AVAILABLE}>Available</option>
@@ -123,35 +123,35 @@ export const ManageToolModal: React.FC<ManageToolModalProps> = ({ tool, groups, 
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Description</label>
+            <label className="block text-sm font-medium text-black mb-1">Description</label>
             <textarea 
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+              className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none text-black"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Price ($)</label>
+              <label className="block text-sm font-medium text-black mb-1">Price ($)</label>
               <input 
                 type="number" 
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none text-black"
               />
             </div>
           </div>
 
           {/* Group Sharing Section */}
           <div className="pt-2">
-            <label className="block text-sm font-medium text-slate-700 mb-2 flex items-center gap-2">
-              <Users className="w-4 h-4 text-slate-500" />
+            <label className="block text-sm font-medium text-black mb-2 flex items-center gap-2">
+              <Users className="w-4 h-4 text-black/60" />
               Share with Groups
             </label>
             {groups.length === 0 ? (
-              <p className="text-xs text-slate-500 italic bg-slate-50 p-3 rounded-lg">Join or create a group to share this tool.</p>
+              <p className="text-xs text-black/60 italic bg-slate-50 p-3 rounded-lg">Join or create a group to share this tool.</p>
             ) : (
               <div className="space-y-2 bg-slate-50 p-3 rounded-xl border border-slate-100 max-h-32 overflow-y-auto">
                 {groups.map(group => (
@@ -162,7 +162,7 @@ export const ManageToolModal: React.FC<ManageToolModalProps> = ({ tool, groups, 
                       onChange={() => toggleGroup(group.id)}
                       className="w-4 h-4 rounded text-primary focus:ring-primary"
                     />
-                    <span className="text-sm text-slate-700">{group.name}</span>
+                    <span className="text-sm text-black">{group.name}</span>
                   </label>
                 ))}
               </div>
