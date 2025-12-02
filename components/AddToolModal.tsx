@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+  import React, { useState, useRef } from 'react';
 import { Camera, Sparkles, X, Upload, Loader2 } from 'lucide-react';
 import { analyzeToolImage } from '../services/geminiService';
 import { Tool, ToolStatus } from '../types';
@@ -62,10 +62,14 @@ export const AddToolModal: React.FC<AddToolModalProps> = ({ onClose, onAdd, preS
     <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
       <div className="bg-white rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto shadow-2xl">
         <div className="p-4 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white z-10">
-          <h2 className="text-xl font-bold text-black">Add New Tool</h2>
-          <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full">
-            <X className="w-5 h-5 text-black/60" />
+          <h2 className="text-xl font-bold text-slate-800">Add New Tool</h2>
+          <button
+            onClick={onClose}
+            className="p-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-full shadow"
+            >
+            <X className="w-5 h-5" />
           </button>
+
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
@@ -78,8 +82,8 @@ export const AddToolModal: React.FC<AddToolModalProps> = ({ onClose, onAdd, preS
               <img src={image} alt="Preview" className="w-full h-full object-cover" />
             ) : (
               <>
-                <Camera className="w-8 h-8 text-black/40 mb-2 group-hover:scale-110 transition-transform" />
-                <span className="text-sm text-black/60 font-medium">Click to take photo or upload</span>
+                <Camera className="w-8 h-8 text-slate-400 mb-2 group-hover:scale-110 transition-transform" />
+                <span className="text-sm text-slate-500 font-medium">Click to take photo or upload</span>
               </>
             )}
             
@@ -101,13 +105,13 @@ export const AddToolModal: React.FC<AddToolModalProps> = ({ onClose, onAdd, preS
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-black mb-1">Tool Name</label>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Tool Name</label>
               <div className="relative">
                 <input 
                   type="text" 
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full p-2 border rounded-lg pr-8 focus:ring-2 focus:ring-primary focus:outline-none text-black"
+                  className="w-full p-2 border rounded-lg pr-8 focus:ring-2 focus:ring-primary focus:outline-none"
                   placeholder="e.g. Cordless Drill"
                   required
                 />
@@ -116,11 +120,11 @@ export const AddToolModal: React.FC<AddToolModalProps> = ({ onClose, onAdd, preS
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-black mb-1">Category</label>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Category</label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none text-black"
+                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
               >
                 <option>Power Tools</option>
                 <option>Hand Tools</option>
@@ -132,23 +136,23 @@ export const AddToolModal: React.FC<AddToolModalProps> = ({ onClose, onAdd, preS
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-black mb-1">Description</label>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Description</label>
               <textarea 
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none text-black"
+                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
                 rows={3}
                 placeholder="Briefly describe condition and specs..."
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-black mb-1">Estimated Value ($)</label>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Estimated Value ($)</label>
               <input 
                 type="number" 
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none text-black"
+                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
                 placeholder="0.00"
               />
             </div>
