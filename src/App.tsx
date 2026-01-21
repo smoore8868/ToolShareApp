@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Plus, Users, Bell, Wrench, QrCode, Share2, 
+import {
+  Plus, Users, Bell, Wrench, QrCode, Share2,
   LayoutDashboard, Search, Calendar, ArrowRight, User as UserIcon, Check, History, LogOut, Settings, Clock, AlertCircle
 } from 'lucide-react';
-import { store } from './services/mockStore';
-import { Tool, Group, Booking, User, ToolStatus, BookingStatus, ViewState } from './types';
+import { Tool, Group, Booking, ViewState } from './types';
 import { ToolCard } from './components/ToolCard';
 import { AddToolModal } from './components/AddToolModal';
 import { BorrowModal } from './components/BorrowModal';
@@ -13,38 +12,76 @@ import { CreateGroupModal, GroupSettingsModal, JoinGroupModal } from './componen
 import { ShareToolsModal } from './components/ShareToolsModal';
 import { Login } from './components/Login';
 
+// Zustand stores
+import { useAuthStore } from './stores/useAuthStore';
+import { useToolStore } from './stores/useToolStore';
+import { useGroupStore } from './stores/useGroupStore';
+import { useBookingStore } from './stores/useBookingStore';
+
+// Custom hooks
+import { useAppData } from './hooks/useAppData';
+import { useBookingActions } from './hooks/useBookingActions';
+import { useDerivedData } from './hooks/useDerivedData';
+
 const App: React.FC = () => {
-  // State
-  const [currentUser, setCurrentUser] = useState<User | null>(store.getCurrentUser());
-  const [users, setUsers] = useState<User[]>(store.getUsers());
-  const [tools, setTools] = useState<Tool[]>([]);
-  const [groups, setGroups] = useState<Group[]>([]);
-  const [bookings, setBookings] = useState<Booking[]>([]);
+  // Initialize app data
+  useAppData();
+
+  // Global state from stores
+  const currentUser = useAuthStore(state => state.currentUser);
+  const users = useAuthStore(state => state.users);
+  const logout = useAuthStore(state => state.logout);
+  const setCurrentUser = useAuthStore(state => state.setCurrentUser);
+
+  const tools = useToolStore(state => state.tools);
+  const addTool = useToolStore(state => state.addTool);
+  const updateTool = useToolStore(state => state.updateTool);
+  const deleteTool = useToolStore(state => state.deleteTool);
+  const updateToolGroups = useToolStore(state => state.updateToolGroups);
+
+  const groups = useGroupStore(state => state.groups);
+  const createGroup = useGroupStore(state => state.createGroup);
+  const updateGroup = useGroupStore(state => state.updateGroup);
+  const deleteGroup = useGroupStore(state => state.deleteGroup);
+  const joinGroup = useGroupStore(state => state.joinGroup);
+  const removeMember = useGroupStore(state => state.removeMember);
+
+  const bookings = useBookingStore(state => state.bookings);
+  const createBooking = useBookingStore(state => state.createBooking);
+
+  // Derived data (memoized)
+  const {
+    myTools,
+    myGroups,
+    marketTools,
+    myBookings,
+    myLendingHistory,
+    incomingRequests,
+    activeBorrows,
+    myToolsBorrowedOut,
+  } = useDerivedData();
+
+  // Booking actions
+  const { handleApproveBooking, handleReturnTool } = useBookingActions();
+
+  // Local UI state
   const [view, setView] = useState<ViewState>('HOME');
-  
+
   // Modals
   const [showAddTool, setShowAddTool] = useState(false);
   const [selectedToolForBorrow, setSelectedToolForBorrow] = useState<Tool | null>(null);
-  const [initialBorrowDate, setInitialBorrowDate] = useState<string>(''); // For future requests
+  const [initialBorrowDate, setInitialBorrowDate] = useState<string>('');
 
   const [showInvite, setShowInvite] = useState<Group | null>(null);
   const [toolToManage, setToolToManage] = useState<Tool | null>(null);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
   const [showJoinGroup, setShowJoinGroup] = useState(false);
-  
+
   const [groupToEdit, setGroupToEdit] = useState<Group | null>(null);
   const [groupEditInitialTab, setGroupEditInitialTab] = useState<'USERS' | 'TOOLS'>('TOOLS');
 
   const [groupToShareWith, setGroupToShareWith] = useState<Group | null>(null);
   const [preSelectedGroupId, setPreSelectedGroupId] = useState<string | undefined>(undefined);
-
-  // Load Initial Data
-  useEffect(() => {
-    setTools(store.getTools());
-    setGroups(store.getGroups());
-    setBookings(store.getBookings());
-    setUsers(store.getUsers());
-  }, [currentUser]);
 
   // Update Title
   useEffect(() => {
@@ -60,47 +97,19 @@ const App: React.FC = () => {
   }, [view]);
 
   // Login Handling
-  const handleLogin = (user: User) => {
-    setCurrentUser(user);
-    // Refresh data in case user changed
-    setTools(store.getTools());
-    setGroups(store.getGroups());
-    setBookings(store.getBookings());
+  const handleLogin = (user: typeof currentUser) => {
+    if (user) {
+      setCurrentUser(user);
+    }
   };
 
   const handleLogout = () => {
-    store.logout();
-    setCurrentUser(null);
+    logout();
   };
 
   if (!currentUser) {
     return <Login onLogin={handleLogin} />;
   }
-
-  // Helpers
-  const myTools = tools.filter(t => t.ownerId === currentUser.id);
-  
-  // Get all groups I am a member of
-  const myGroupIds = groups.filter(g => g.memberIds.includes(currentUser.id)).map(g => g.id);
-  const myGroups = groups.filter(g => g.memberIds.includes(currentUser.id));
-
-  // Market Tools: 
-  // 1. Not owned by me
-  // 2. Shared with a group I am in
-  const marketTools = tools.filter(t => {
-     const isNotMine = t.ownerId !== currentUser.id;
-     const isSharedWithMyGroup = t.groupIds.some(gid => myGroupIds.includes(gid));
-     return isNotMine && isSharedWithMyGroup;
-  });
-
-  const myBookings = bookings.filter(b => b.borrowerId === currentUser.id);
-  const myLendingHistory = bookings.filter(b => b.ownerId === currentUser.id);
-  
-  const incomingRequests = bookings.filter(b => b.ownerId === currentUser.id && b.status === BookingStatus.PENDING);
-
-  // Derived state for Home Dashboard
-  const activeBorrows = bookings.filter(b => b.borrowerId === currentUser.id && b.status === BookingStatus.APPROVED);
-  const myToolsBorrowedOut = tools.filter(t => t.ownerId === currentUser.id && t.status === ToolStatus.BORROWED);
 
   // Time calculations
   const getHoursRemaining = (endDateStr: string) => {
@@ -111,75 +120,30 @@ const App: React.FC = () => {
 
   // Actions
   const handleAddTool = (newToolData: Omit<Tool, 'id' | 'ownerId'>) => {
-    const newTool: Tool = {
+    addTool({
       ...newToolData,
-      id: Math.random().toString(36).substr(2, 9),
       ownerId: currentUser.id,
-    };
-    const updatedTools = [...tools, newTool];
-    setTools(updatedTools);
-    store.saveTools(updatedTools);
-    setPreSelectedGroupId(undefined); // Reset
+    });
+    setPreSelectedGroupId(undefined);
   };
 
-  const handleUpdateTool = (updatedTool: Tool) => {
-    const updatedTools = tools.map(t => t.id === updatedTool.id ? updatedTool : t);
-    setTools(updatedTools);
-    store.saveTools(updatedTools);
-  };
+  const handleCreateBooking = (bookingData: Omit<Booking, 'id' | 'borrowerId' | 'ownerId' | 'status'>) => {
+    if (!selectedToolForBorrow) return;
 
-  const handleDeleteTool = (toolId: string) => {
-    const updatedTools = tools.filter(t => t.id !== toolId);
-    setTools(updatedTools);
-    store.saveTools(updatedTools);
-  };
-
-  const handleCreateBooking = (bookingData: any) => {
-    const newBooking: Booking = {
-      id: Math.random().toString(36).substr(2, 9),
+    createBooking({
       ...bookingData,
+      toolId: bookingData.toolId,
       borrowerId: currentUser.id,
-      ownerId: selectedToolForBorrow!.ownerId, // Non-null assertion safe due to flow
-      status: BookingStatus.PENDING
-    };
-    const updatedBookings = [...bookings, newBooking];
-    setBookings(updatedBookings);
-    store.saveBookings(updatedBookings);
+      ownerId: selectedToolForBorrow.ownerId,
+      startDate: bookingData.startDate,
+      endDate: bookingData.endDate,
+      reason: bookingData.reason,
+      logistics: bookingData.logistics,
+    });
+
     setSelectedToolForBorrow(null);
     setInitialBorrowDate('');
     setView('HISTORY');
-  };
-
-  const handleApproveBooking = (booking: Booking) => {
-    // 1. Update booking status
-    const updatedBookings = bookings.map(b => 
-      b.id === booking.id ? { ...b, status: BookingStatus.APPROVED } : b
-    );
-    setBookings(updatedBookings);
-    store.saveBookings(updatedBookings);
-
-    // 2. Update tool status
-    const updatedTools = tools.map(t => 
-      t.id === booking.toolId ? { ...t, status: ToolStatus.BORROWED, currentHolderId: booking.borrowerId } : t
-    );
-    setTools(updatedTools);
-    store.saveTools(updatedTools);
-  };
-
-  const handleReturnTool = (booking: Booking) => {
-    // 1. Mark booking completed
-    const updatedBookings = bookings.map(b => 
-      b.id === booking.id ? { ...b, status: BookingStatus.COMPLETED } : b
-    );
-    setBookings(updatedBookings);
-    store.saveBookings(updatedBookings);
-
-    // 2. Mark tool available
-    const updatedTools = tools.map(t => 
-      t.id === booking.toolId ? { ...t, status: ToolStatus.AVAILABLE, currentHolderId: undefined } : t
-    );
-    setTools(updatedTools);
-    store.saveTools(updatedTools);
   };
 
   const handleRequestExtension = (booking: Booking) => {
@@ -187,80 +151,29 @@ const App: React.FC = () => {
   };
 
   const handleCreateGroup = (name: string) => {
-    const newGroup: Group = {
-      id: Math.random().toString(36).substr(2, 9),
-      name,
-      ownerId: currentUser.id,
-      memberIds: [currentUser.id],
-      inviteCode: Math.random().toString(36).substr(2, 6).toUpperCase()
-    };
-    const updatedGroups = [...groups, newGroup];
-    setGroups(updatedGroups);
-    store.saveGroups(updatedGroups);
+    createGroup(name, currentUser.id);
   };
 
   const handleJoinGroup = (code: string) => {
-    const group = groups.find(g => g.inviteCode === code);
+    const group = joinGroup(code, currentUser.id);
     if (group) {
-      if (group.memberIds.includes(currentUser.id)) {
+      const wasAlreadyMember = groups.find(g => g.id === group.id && g.memberIds.includes(currentUser.id));
+      if (wasAlreadyMember) {
         alert('You are already a member of this group.');
-        return;
       }
-      const updatedGroup = {
-        ...group,
-        memberIds: [...group.memberIds, currentUser.id]
-      };
-      handleUpdateGroup(updatedGroup);
       setShowJoinGroup(false);
     } else {
       alert('Invalid invite code. Please try again.');
     }
   };
 
-  const handleUpdateGroup = (updatedGroup: Group) => {
-    const updatedGroups = groups.map(g => g.id === updatedGroup.id ? updatedGroup : g);
-    setGroups(updatedGroups);
-    store.saveGroups(updatedGroups);
-  };
-
-  const handleDeleteGroup = (groupId: string) => {
-    const updatedGroups = groups.filter(g => g.id !== groupId);
-    setGroups(updatedGroups);
-    store.saveGroups(updatedGroups);
-  };
-
   const handleRemoveMember = (groupId: string, userId: string) => {
-    const group = groups.find(g => g.id === groupId);
-    if (!group) return;
-
-    const updatedGroup = {
-      ...group,
-      memberIds: group.memberIds.filter(id => id !== userId)
-    };
-    handleUpdateGroup(updatedGroup);
+    removeMember(groupId, userId);
   };
 
   const handleGroupToolUpdate = (toolIds: string[], groupId: string) => {
-    const updatedTools = tools.map(t => {
-      // If tool is owned by me
-      if (t.ownerId === currentUser.id) {
-         // Should it be in the group?
-         const shouldBeInGroup = toolIds.includes(t.id);
-         const currentGroupIds = t.groupIds || [];
-         
-         let newGroupIds = [...currentGroupIds];
-         if (shouldBeInGroup && !currentGroupIds.includes(groupId)) {
-            newGroupIds.push(groupId);
-         } else if (!shouldBeInGroup && currentGroupIds.includes(groupId)) {
-            newGroupIds = newGroupIds.filter(id => id !== groupId);
-         }
-         return { ...t, groupIds: newGroupIds };
-      }
-      return t;
-    });
-    setTools(updatedTools);
-    store.saveTools(updatedTools);
-    setGroupToShareWith(null); // Close modal
+    updateToolGroups(toolIds, groupId, currentUser.id);
+    setGroupToShareWith(null);
   };
 
   const openCreateToolForGroup = () => {
@@ -272,8 +185,7 @@ const App: React.FC = () => {
   };
 
   const switchUser = (userId: string) => {
-    const allUsers = store.getUsers();
-    const user = allUsers.find(u => u.id === userId);
+    const user = users.find(u => u.id === userId);
     if (user) {
       setCurrentUser(user);
       setView('HOME');
@@ -303,7 +215,7 @@ const App: React.FC = () => {
             </span>
           )}
         </div>
-        
+
         {incomingRequests.length === 0 ? (
           <div className="bg-white p-6 rounded-xl border border-slate-200 text-center text-black/40">
             <div className="bg-slate-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
@@ -331,7 +243,7 @@ const App: React.FC = () => {
                   </div>
                   <div className="flex items-center justify-between pt-2 border-t border-slate-50">
                     <span className="text-xs font-mono text-black/60">{req.startDate} - {req.endDate}</span>
-                    <button 
+                    <button
                       onClick={() => handleApproveBooking(req)}
                       className="px-4 py-1.5 bg-primary text-white text-xs font-bold rounded-lg hover:bg-indigo-600 transition-colors"
                     >
@@ -345,7 +257,7 @@ const App: React.FC = () => {
         )}
       </section>
 
-      {/* 2. Tools I am Borrowing (Moved Up) */}
+      {/* 2. Tools I am Borrowing */}
       <section>
         <h3 className="font-bold text-black mb-3 flex items-center gap-2">
           <Wrench className="w-4 h-4 text-green-600" />
@@ -371,13 +283,13 @@ const App: React.FC = () => {
                     <div className="flex-1 min-w-0">
                       <h4 className="font-bold text-black text-sm truncate">{tool?.name}</h4>
                       <p className="text-xs text-black/80">From {owner?.name}</p>
-                      
+
                       <div className={`flex items-center gap-1 mt-1 text-xs font-bold ${isUrgent ? 'text-amber-600' : isOverdue ? 'text-red-600' : 'text-black/60'}`}>
                         <Clock className="w-3 h-3" />
                         {isOverdue ? 'Overdue!' : isUrgent ? `${Math.ceil(hoursLeft)} hours left` : `Due ${booking.endDate}`}
                       </div>
                     </div>
-                    <button 
+                    <button
                       onClick={() => handleReturnTool(booking)}
                       className="p-2 bg-white border border-slate-200 rounded-full hover:bg-slate-50 text-black shadow-sm"
                       title="Return Tool"
@@ -385,10 +297,9 @@ const App: React.FC = () => {
                       <ArrowRight className="w-4 h-4" />
                     </button>
                   </div>
-                  
-                  {/* Extension Button for < 24h */}
+
                   {isUrgent && (
-                     <button 
+                     <button
                        onClick={() => handleRequestExtension(booking)}
                        className="w-full py-1.5 text-xs font-bold text-amber-700 bg-amber-100 hover:bg-amber-200 rounded-lg flex items-center justify-center gap-1"
                      >
@@ -403,7 +314,7 @@ const App: React.FC = () => {
         )}
       </section>
 
-      {/* 3. Tools I have Borrowed Out (Moved Down) */}
+      {/* 3. Tools I have Borrowed Out */}
       <section>
         <h3 className="font-bold text-black mb-3 flex items-center gap-2">
           <Share2 className="w-4 h-4 text-blue-500" />
@@ -416,13 +327,12 @@ const App: React.FC = () => {
         ) : (
           <div className="grid grid-cols-1 gap-3">
             {myToolsBorrowedOut.map(tool => {
-              // Find active booking to get dates
-              const activeBooking = bookings.find(b => 
-                b.toolId === tool.id && 
-                b.status === BookingStatus.APPROVED
+              const activeBooking = bookings.find(b =>
+                b.toolId === tool.id &&
+                b.status === 'APPROVED'
               );
               const holder = users.find(u => u.id === tool.currentHolderId);
-              
+
               return (
                 <div key={tool.id} className="bg-white p-3 rounded-xl border border-slate-200 flex items-center gap-3">
                   <div className="relative">
@@ -454,7 +364,7 @@ const App: React.FC = () => {
     <div className="space-y-6 animate-in fade-in">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-black">My Tools</h2>
-        <button 
+        <button
           onClick={() => {
             setPreSelectedGroupId(undefined);
             setShowAddTool(true);
@@ -474,11 +384,11 @@ const App: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {myTools.map(tool => (
-            <ToolCard 
-              key={tool.id} 
-              tool={tool} 
-              isOwner={true} 
-              onAction={(t) => setToolToManage(t)} 
+            <ToolCard
+              key={tool.id}
+              tool={tool}
+              isOwner={true}
+              onAction={(t) => setToolToManage(t)}
             />
           ))}
         </div>
@@ -494,7 +404,7 @@ const App: React.FC = () => {
           <p className="text-sm text-black/60">From your groups</p>
         </div>
       </div>
-      
+
       {marketTools.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-xl border border-dashed border-slate-300">
           <Search className="w-12 h-12 text-slate-300 mx-auto mb-3" />
@@ -504,15 +414,14 @@ const App: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {marketTools.map(tool => {
-            // Find active booking if borrowed
-            const activeBooking = bookings.find(b => 
-              b.toolId === tool.id && b.status === BookingStatus.APPROVED
+            const activeBooking = bookings.find(b =>
+              b.toolId === tool.id && b.status === 'APPROVED'
             );
-            
+
             return (
-              <ToolCard 
-                key={tool.id} 
-                tool={tool} 
+              <ToolCard
+                key={tool.id}
+                tool={tool}
                 ownerName={users.find(u => u.id === tool.ownerId)?.name}
                 isOwner={false}
                 activeBooking={activeBooking}
@@ -521,7 +430,7 @@ const App: React.FC = () => {
                   if (activeBooking) {
                     const nextDate = new Date(activeBooking.endDate);
                     nextDate.setDate(nextDate.getDate() + 1);
-                    setInitialBorrowDate(nextDate.toISOString().split('T')[0]);
+                    setInitialBorrowDate(nextDate.toISOString().split('T')[0] || '');
                     setSelectedToolForBorrow(t);
                   }
                 }}
@@ -535,8 +444,8 @@ const App: React.FC = () => {
 
   const renderHistory = () => (
     <div className="space-y-8 animate-in fade-in">
-      
-      {/* 1. Lending History (My Tools) */}
+
+      {/* 1. Lending History */}
       <section>
         <h3 className="text-lg font-bold text-black mb-4 flex items-center gap-2">
           <Share2 className="w-5 h-5 text-blue-500" />
@@ -561,9 +470,9 @@ const App: React.FC = () => {
                   </div>
                   <div className="text-right">
                     <span className={`inline-block px-2 py-1 rounded text-xs font-bold mb-1 ${
-                      booking.status === BookingStatus.APPROVED ? 'bg-green-100 text-green-700' : 
-                      booking.status === BookingStatus.PENDING ? 'bg-amber-100 text-amber-700' :
-                      booking.status === BookingStatus.COMPLETED ? 'bg-slate-100 text-slate-600' :
+                      booking.status === 'APPROVED' ? 'bg-green-100 text-green-700' :
+                      booking.status === 'PENDING' ? 'bg-amber-100 text-amber-700' :
+                      booking.status === 'COMPLETED' ? 'bg-slate-100 text-slate-600' :
                       'bg-red-50 text-red-500'
                     }`}>
                       {booking.status}
@@ -576,7 +485,7 @@ const App: React.FC = () => {
         )}
       </section>
 
-      {/* 2. Borrowing History (Tools I borrowed) */}
+      {/* 2. Borrowing History */}
       <section>
         <h3 className="text-lg font-bold text-black mb-4 flex items-center gap-2">
           <History className="w-5 h-5 text-purple-500" />
@@ -601,9 +510,9 @@ const App: React.FC = () => {
                     </div>
                     <div className="text-right">
                       <span className={`inline-block px-2 py-1 rounded text-xs font-bold mb-1 ${
-                        booking.status === BookingStatus.APPROVED ? 'bg-green-100 text-green-700' : 
-                        booking.status === BookingStatus.PENDING ? 'bg-amber-100 text-amber-700' :
-                        booking.status === BookingStatus.COMPLETED ? 'bg-slate-100 text-slate-600' :
+                        booking.status === 'APPROVED' ? 'bg-green-100 text-green-700' :
+                        booking.status === 'PENDING' ? 'bg-amber-100 text-amber-700' :
+                        booking.status === 'COMPLETED' ? 'bg-slate-100 text-slate-600' :
                         'bg-red-50 text-red-500'
                       }`}>
                         {booking.status}
@@ -623,14 +532,14 @@ const App: React.FC = () => {
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-black">My Groups</h2>
         <div className="flex gap-2">
-          <button 
+          <button
             onClick={() => setShowJoinGroup(true)}
             className="text-primary font-medium hover:underline text-sm"
           >
             Join Group
           </button>
           <span className="text-black/20">|</span>
-          <button 
+          <button
             onClick={() => setShowCreateGroup(true)}
             className="text-primary font-medium hover:underline text-sm"
           >
@@ -640,7 +549,7 @@ const App: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {groups.map(group => (
+        {myGroups.map(group => (
           <div key={group.id} className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow">
             <div className="flex justify-between items-start mb-4">
               <div>
@@ -654,10 +563,9 @@ const App: React.FC = () => {
                 })}
               </div>
             </div>
-            
-            {/* Action Buttons */}
+
             <div className="flex gap-2 mt-4">
-              <button 
+              <button
                 onClick={() => {
                   setGroupToEdit(group);
                   setGroupEditInitialTab('USERS');
@@ -668,8 +576,8 @@ const App: React.FC = () => {
                 <Settings className="w-4 h-4" />
                 Settings
               </button>
-              
-              <button 
+
+              <button
                 onClick={() => setShowInvite(group)}
                 className="flex-1 bg-primary text-white py-2 rounded-lg font-bold text-sm hover:bg-indigo-600 transition-colors flex items-center justify-center gap-2"
                 title="Invite to Group"
@@ -681,22 +589,22 @@ const App: React.FC = () => {
           </div>
         ))}
       </div>
-      
+
       {/* Invite Modal */}
       {showInvite && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl p-6 w-full max-w-sm text-center">
             <h3 className="text-xl font-bold text-black mb-2">Invite to {showInvite.name}</h3>
             <p className="text-black/60 text-sm mb-6">Scan to join or share the link</p>
-            
+
             <div className="bg-white p-4 rounded-xl border-2 border-slate-100 inline-block mb-6">
-               <img 
-                 src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://toolshare.app/join/${showInvite.inviteCode}`} 
-                 alt="QR Code" 
+               <img
+                 src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://toolshare.app/join/${showInvite.inviteCode}`}
+                 alt="QR Code"
                  className="w-32 h-32"
                />
             </div>
-            
+
             <div className="flex items-center gap-2 bg-slate-100 p-2 rounded-lg mb-4">
               <span className="text-lg font-mono font-bold text-slate-700 mx-auto tracking-widest">{showInvite.inviteCode}</span>
             </div>
@@ -710,8 +618,8 @@ const App: React.FC = () => {
   );
 
   // Bottom Navigation Item
-  const NavItem = ({ id, icon: Icon, label }: { id: ViewState, icon: any, label: string }) => (
-    <button 
+  const NavItem = ({ id, icon: Icon, label }: { id: ViewState, icon: React.ElementType, label: string }) => (
+    <button
       onClick={() => setView(id)}
       className={`flex flex-col items-center justify-center w-full py-3 transition-colors ${
         view === id ? 'text-primary' : 'text-slate-400 hover:text-slate-600'
@@ -724,7 +632,7 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 pb-24">
-      {/* Header - Always Visible */}
+      {/* Header */}
       <header className="border-b border-slate-200 sticky top-0 z-20 px-4 py-3 shadow-sm" style={{ backgroundColor: '#7393B3' }}>
         <div className="max-w-5xl mx-auto flex justify-between items-center">
            <div className="flex items-center gap-2 text-white font-bold text-lg">
@@ -733,13 +641,12 @@ const App: React.FC = () => {
              </div>
              ToolShare
           </div>
-          
+
           <div className="flex items-center gap-4">
-             {/* Switcher for Demo */}
              <div className="hidden sm:flex items-center gap-2 border-r border-white/20 pr-4 mr-2">
                 <span className="text-xs text-white/80 font-medium uppercase tracking-wider mr-2">Switch User</span>
                 {users.map(u => (
-                  <button 
+                  <button
                     key={u.id}
                     onClick={() => switchUser(u.id)}
                     className={`w-8 h-8 rounded-full overflow-hidden border transition-colors ${
@@ -755,7 +662,7 @@ const App: React.FC = () => {
              <div className="flex items-center gap-2">
                <span className="hidden sm:block text-sm font-bold text-white">{currentUser.name}</span>
                <img src={currentUser.avatar} className="w-9 h-9 rounded-full border-2 border-white/50 shadow-sm" alt="Profile" />
-               
+
                <button onClick={handleLogout} className="ml-2 text-white/70 hover:text-white">
                   <LogOut className="w-5 h-5" />
                </button>
@@ -773,7 +680,7 @@ const App: React.FC = () => {
         {view === 'HISTORY' && renderHistory()}
       </main>
 
-      {/* Bottom Nav - Always Visible */}
+      {/* Bottom Nav */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex justify-around z-30 pb-safe shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
         <div className="flex w-full max-w-lg justify-around">
           <NavItem id="HOME" icon={LayoutDashboard} label="Home" />
@@ -786,15 +693,15 @@ const App: React.FC = () => {
 
       {/* Modals */}
       {showAddTool && (
-        <AddToolModal 
-          onClose={() => setShowAddTool(false)} 
-          onAdd={handleAddTool} 
+        <AddToolModal
+          onClose={() => setShowAddTool(false)}
+          onAdd={handleAddTool}
           preSelectedGroupId={preSelectedGroupId}
         />
       )}
 
       {selectedToolForBorrow && (
-        <BorrowModal 
+        <BorrowModal
           tool={selectedToolForBorrow}
           initialStartDate={initialBorrowDate}
           onClose={() => {
@@ -806,17 +713,17 @@ const App: React.FC = () => {
       )}
 
       {toolToManage && (
-        <ManageToolModal 
+        <ManageToolModal
           tool={toolToManage}
-          groups={myGroups} // Pass user's groups
+          groups={myGroups}
           onClose={() => setToolToManage(null)}
-          onUpdate={handleUpdateTool}
-          onDelete={handleDeleteTool}
+          onUpdate={updateTool}
+          onDelete={deleteTool}
         />
       )}
 
       {showCreateGroup && (
-        <CreateGroupModal 
+        <CreateGroupModal
           onClose={() => setShowCreateGroup(false)}
           onCreate={handleCreateGroup}
         />
@@ -830,18 +737,18 @@ const App: React.FC = () => {
       )}
 
       {groupToEdit && (
-        <GroupSettingsModal 
+        <GroupSettingsModal
           group={groupToEdit}
           members={users.filter(u => groupToEdit.memberIds.includes(u.id))}
           groupTools={tools.filter(t => t.groupIds.includes(groupToEdit.id))}
           currentUser={currentUser}
           initialTab={groupEditInitialTab}
           onClose={() => setGroupToEdit(null)}
-          onUpdate={handleUpdateGroup}
-          onDelete={handleDeleteGroup}
+          onUpdate={updateGroup}
+          onDelete={deleteGroup}
           onManageTools={() => {
             setGroupToShareWith(groupToEdit);
-            setGroupToEdit(null); // Close settings, open share
+            setGroupToEdit(null);
           }}
           onRemoveMember={handleRemoveMember}
           onInvite={() => {
@@ -852,7 +759,7 @@ const App: React.FC = () => {
       )}
 
       {groupToShareWith && (
-        <ShareToolsModal 
+        <ShareToolsModal
           group={groupToShareWith}
           myTools={myTools}
           onClose={() => setGroupToShareWith(null)}

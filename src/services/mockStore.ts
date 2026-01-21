@@ -1,4 +1,5 @@
 import { Tool, User, Group, Booking, ToolStatus } from '../types';
+import { generateId } from '../utils/generateId';
 
 // Initial Mock Data
 const DEFAULT_USERS: User[] = [
@@ -85,7 +86,7 @@ export const store = {
   register: (email: string, name: string): User => {
     const users = load('users', DEFAULT_USERS);
     const newUser: User = {
-      id: Math.random().toString(36).substr(2, 9),
+      id: generateId(),
       email,
       name,
       avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${name.replace(' ', '')}`
